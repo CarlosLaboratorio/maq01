@@ -1,0 +1,668 @@
+/* =========================================================
+   VARIABLES Y BASE
+========================================================= */
+:root{
+  --primario:#7ba0bb;
+  --secundario:#3c6382;
+  --acento:#82ccdd;
+  --fondo:#f5f5f5;
+  --texto:#222;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:'Segoe UI',system-ui,-apple-system,Arial,Helvetica,sans-serif;
+  color:var(--texto);
+  background:var(--fondo);
+  line-height:1.6;
+}
+
+/* =========================================================
+   NAVBAR + HAMBURGUESA OFF-CANVAS (sin JS)
+========================================================= */
+.header{
+  position:sticky; top:0; background:#fff;
+  box-shadow:0 2px 8px rgba(0,0,0,.08); z-index:100;
+}
+.nav{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:1rem; padding:.6rem 1rem; max-width:1100px; margin:0 auto;
+}
+.brand{display:flex; align-items:center; gap:.6rem; text-decoration:none}
+.logo{height:40px; inline-size:auto}
+.brand__txt{font-weight:700; color:var(--primario); letter-spacing:.2px}
+
+/* Menú horizontal (desktop) */
+.menu{list-style:none; display:flex; gap:.6rem; align-items:center}
+.menu a{
+  text-decoration:none; color:#222;
+  padding:.5rem .9rem; border-radius:999px; transition:.25s;
+}
+.menu a:hover, .menu a[aria-current="page"]{ background:var(--primario); color:#fff }
+
+/* Botón hamburguesa (visible en móvil) */
+.hamburger{
+  display:none; width:42px; height:42px; border-radius:12px;
+  border:1px solid #e5e7eb; cursor:pointer;
+  align-items:center; justify-content:center; flex-direction:column; gap:6px;
+}
+.hamburger span{ width:22px; height:2px; background:var(--primario); transition:.25s }
+
+/* ---- Panel deslizante (drawer) ---- */
+.drawer{
+  position:fixed; top:0; right:0; height:100vh; width:78vw; max-width:320px;
+  background:#fff; box-shadow:-10px 0 30px rgba(0,0,0,.12);
+  transform:translateX(100%); transition:transform .3s ease; z-index:120; padding:1rem;
+}
+.drawer__menu{ list-style:none; display:grid; gap:.4rem; margin-top:.5rem }
+.drawer__menu a{
+  display:block; padding:.9rem 1rem; border-radius:12px; text-decoration:none; color:#0e1116;
+  background:#f6f7f9; transition:transform .18s ease, background .18s ease;
+  opacity:0; transform:translateX(12px);
+}
+.drawer__menu a:hover{ background:#e9edf3; transform:translateX(6px) }
+.drawer__menu a[aria-current="page"]{ background:var(--primario); color:#fff }
+
+/* Fondo oscuro clickeable para cerrar */
+.overlay{
+  position:fixed; inset:0; background:rgba(0,0,0,.35);
+  opacity:0; pointer-events:none; transition:opacity .25s ease; z-index:110;
+}
+
+/* ---- Mobile rules ---- */
+@media (max-width:820px){
+  .hamburger{display:flex}
+  .menu{display:none} /* ocultamos menú horizontal */
+}
+
+/* ---- Apertura/Cierre controlado por checkbox ---- */
+.nav__toggle:checked ~ .drawer{ transform:translateX(0) }
+.nav__toggle:checked ~ .overlay{ opacity:1; pointer-events:auto }
+
+/* Animación hamburguesa a "X" (el checkbox es HERMANO de .nav) */
+.nav__toggle:checked ~ .nav .hamburger span:nth-child(1){ transform:translateY(7px) rotate(45deg) }
+.nav__toggle:checked ~ .nav .hamburger span:nth-child(2){ opacity:0 }
+.nav__toggle:checked ~ .nav .hamburger span:nth-child(3){ transform:translateY(-7px) rotate(-45deg) }
+
+/* Aparición escalonada de links del drawer */
+@keyframes slideIn{from{opacity:0;transform:translateX(16px)} to{opacity:1;transform:none}}
+.nav__toggle:checked ~ .drawer .drawer__menu a{ animation:slideIn .28s ease forwards }
+.nav__toggle:checked ~ .drawer .drawer__menu li:nth-child(1) a{ animation-delay:.04s }
+.nav__toggle:checked ~ .drawer .drawer__menu li:nth-child(2) a{ animation-delay:.09s }
+.nav__toggle:checked ~ .drawer .drawer__menu li:nth-child(3) a{ animation-delay:.14s }
+.nav__toggle:checked ~ .drawer .drawer__menu li:nth-child(4) a{ animation-delay:.19s }
+
+/* =========================================================
+   BOTONES / FOOTER
+========================================================= */
+.btn{
+  display:inline-block; background:var(--acento); color:#000;
+  text-decoration:none; padding:.8rem 1.5rem; border-radius:999px;
+  font-weight:600; transition:.3s;
+}
+.btn:hover{ filter:brightness(1.1) }
+.footer{
+  text-align:center; padding:1.5rem; background:var(--secundario);
+  color:#fff; font-size:.9rem;
+}
+
+/* =========================================================
+   ANIMACIONES UTILITARIAS
+========================================================= */
+@keyframes fadeUp{ from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+@keyframes breathe{
+  0%,100%{ transform:translateY(0); box-shadow:0 8px 18px rgba(10,61,98,.15) }
+  50%{ transform:translateY(-2px); box-shadow:0 12px 24px rgba(10,61,98,.22) }
+}
+@keyframes gradientSlide{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
+/* =========================================================
+   INICIO (index.html)
+   (Con Live Server usamos ruta absoluta /img/… para el fondo)
+========================================================= */
+.page-inicio .hero{
+  text-align:center; padding:5rem 1rem; color:#fff;
+  background:
+    linear-gradient(115deg, rgba(10,61,98,.92), rgba(60,99,130,.92)),
+    url('/img/s70.jpg') center/cover no-repeat;
+  background-size:200% 200%, cover; /* el gradiente se anima */
+  animation:gradientSlide 12s ease infinite;
+}
+.page-inicio .hero h1{
+  font-size:clamp(1.8rem,3vw + 1rem,3rem); margin-bottom:1rem; animation:fadeUp .6s ease both;
+}
+.page-inicio .hero p{ animation:fadeUp .8s ease both }
+.page-inicio .hero .btn{ animation:fadeUp 1s ease both, breathe 3s 1.2s ease-in-out infinite }
+
+/* =========================================================
+   PRODUCTOS (pages/productos.html)
+========================================================= */
+.page-productos .contenedor{ padding:2rem; text-align:center }
+.page-productos .grid{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:1rem; margin-top:2rem;
+}
+.page-productos .card{
+  background:#fff; border-radius:var(--radius); box-shadow:0 4px 10px rgba(0,0,0,.1);
+  overflow:hidden; animation:fadeUp .45s ease both;
+}
+.page-productos .card img{ width:100%; aspect-ratio:4/3; object-fit:cover }
+.page-productos .card .body{ padding:1rem }
+.page-productos .price{ color:var(--primario); font-weight:700; margin-top:.5rem }
+.page-productos .card:hover{ transform:translateY(-4px); transition:transform .2s ease }
+
+/* =========================================================
+   GALERÍA (pages/galeria.html)
+========================================================= */
+.page-galeria .galeria{ padding:2rem; text-align:center }
+.page-galeria .grid{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:1rem; margin-top:2rem;
+}
+.page-galeria .grid img{
+  width:100%; aspect-ratio:4/3; object-fit:cover; border-radius:var(--radius);
+  transition:transform .3s;
+}
+.page-galeria .grid img:hover{ transform:scale(1.05) }
+
+/* =========================================================
+   CONTACTO (pages/contacto.html)
+========================================================= */
+.page-contacto .contacto{ padding:2rem; text-align:center }
+.page-contacto .form{
+  max-width:400px; margin:2rem auto; display:grid; gap:1rem;
+}
+.page-contacto input, .page-contacto textarea{
+  width:100%; padding:.8rem; border:1px solid #ccc; border-radius:var(--radius);
+}
+.page-contacto button.btn{ border:none; cursor:pointer }
+
+/* =========================================================
+   ACCESIBILIDAD (foco teclado)
+========================================================= */
+a:focus-visible{
+  outline:3px solid var(--acento);
+  outline-offset:2px;
+  border-radius:10px;
+}
+
+/* =========================================================
+   CARRUSEL POR PRODUCTO (sin JS, con :target)
+========================================================= */
+.slider{
+  position:relative;
+  width:100%;
+  aspect-ratio:4/3;
+  overflow:hidden;
+  background:#fff;
+  border-radius: var(--radius);
+}
+.slider .slide{
+  position:absolute; inset:0;
+  opacity:0; pointer-events:none;
+  transition:opacity .35s ease;
+}
+.slider .slide img{
+  width:100%; height:100%; object-fit:cover;
+  display:block;
+}
+
+/* Mostrar la 1ª si no hay :target */
+.slider .slide:first-of-type{ opacity:1; pointer-events:auto; }
+
+/* Cuando una slide es el target, se muestra */
+.slider .slide:target{ opacity:1; pointer-events:auto; }
+
+/* Flechas internas por slide (cambian el hash) */
+.slider .nav{
+  position:absolute; top:50%; transform:translateY(-50%);
+  width:42px; height:42px; border-radius:50%;
+  display:grid; place-items:center;
+  background:rgba(0,0,0,.45);
+  color:#fff; text-decoration:none; font-size:1.6rem; line-height:1;
+  transition:background .2s; user-select:none;
+}
+.slider .nav:hover{ background:rgba(0,0,0,.7); }
+.slider .nav.prev{ left:10px; }
+.slider .nav.next{ right:10px; }
+
+/* Puntos inferiores */
+.slider .dots{
+  position:absolute; left:0; right:0; bottom:10px;
+  display:flex; justify-content:center; gap:8px;
+}
+.slider .dots a{
+  width:9px; height:9px; border-radius:999px;
+  background:#e1e5ea; display:block; text-decoration:none;
+  box-shadow: 0 0 0 2px rgba(255,255,255,.8);
+}
+
+/* Punto activo por defecto (s1) */
+#p1 .dots a[href="#p1-s1"],
+#p2 .dots a[href="#p2-s1"],
+#p3 .dots a[href="#p3-s1"]{ background:#0a3d62; }
+
+/* Punto activo al cambiar con :target */
+:target#p1-s2 ~ .dots a[href="#p1-s2"],
+:target#p1-s3 ~ .dots a[href="#p1-s3"]{ background:#0a3d62; }
+:target#p2-s2 ~ .dots a[href="#p2-s2"],
+:target#p2-s3 ~ .dots a[href="#p2-s3"]{ background:#0a3d62; }
+:target#p3-s2 ~ .dots a[href="#p3-s2"],
+:target#p3-s3 ~ .dots a[href="#p3-s3"]{ background:#0a3d62; }
+
+/* =========================================================
+   AUTOPLAY PARA CADA CARRUSEL (sin JS)
+   - Requiere class="slider auto" en el contenedor
+   - 3 imágenes: 0s / 4s / 8s → duración total 12s
+========================================================= */
+@keyframes cycle3 {
+  0%, 26% { opacity: 1; pointer-events: auto; }
+  33%, 100% { opacity: 0; pointer-events: none; }
+}
+.slider.auto .slide{
+  animation: cycle3 12s infinite ease-in-out;
+}
+.slider.auto .slide:nth-child(1){ animation-delay: 0s; }
+.slider.auto .slide:nth-child(2){ animation-delay: 4s; }
+.slider.auto .slide:nth-child(3){ animation-delay: 8s; }
+
+/* Pausas por interacción */
+.slider.auto:hover .slide{ animation-play-state: paused; }
+.slider.auto:has(.slide:target) .slide{ animation-play-state: paused; }
+.slider.auto .slide:target{ z-index: 1; }
+
+/* Accesibilidad: reducir movimiento */
+@media (prefers-reduced-motion: reduce){
+  .slider.auto .slide{ animation: none !important; opacity: 0; pointer-events: none; }
+  .slider.auto .slide:first-of-type,
+  .slider.auto .slide:target{ opacity: 1; pointer-events: auto; }
+}
+
+/* =========================================================
+   EFECTO HOVER: MOSTRAR CARACTERÍSTICAS (glass)
+========================================================= */
+.card {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+.features {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  background: rgba(10,61,98,0.92);
+  backdrop-filter: blur(3px);
+  color: #fff;
+  transform: translateY(100%);
+  transition: transform 0.4s ease;
+  padding: 1rem;
+  text-align: left;
+  font-size: 0.9rem;
+}
+.features ul{ list-style: none; margin: 0; padding: 0; }
+.features li{
+  margin: 0.3rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+  padding-bottom: 0.2rem;
+}
+.card:hover .features{ transform: translateY(0); }
+
+/* =========================================================
+   PREFERENCIAS DE MOVIMIENTO (global)
+========================================================= */
+@media (prefers-reduced-motion: reduce){
+  *{animation:none !important; transition:none !important}
+}
+/* =========================================================
+   ANIMACIÓN SUAVE DEL MENÚ HAMBURGUESA (DESPLIEGUE)
+========================================================= */
+.drawer {
+  opacity: 0;
+  transform: translateX(100%);
+  transition: transform .3s ease, opacity .3s ease;
+}
+.nav__toggle:checked ~ .drawer {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Animación escalonada de enlaces */
+.drawer__menu a {
+  transform: translateX(20px);
+  opacity: 0;
+  transition: all .3s ease;
+}
+.nav__toggle:checked ~ .drawer .drawer__menu a {
+  opacity: 1;
+  transform: translateX(0);
+}
+.nav__toggle:checked ~ .drawer .drawer__menu li:nth-child(1) a { transition-delay: .05s; }
+.nav__toggle:checked ~ .drawer .drawer__menu li:nth-child(2) a { transition-delay: .1s; }
+.nav__toggle:checked ~ .drawer .drawer__menu li:nth-child(3) a { transition-delay: .15s; }
+.nav__toggle:checked ~ .drawer .drawer__menu li:nth-child(4) a { transition-delay: .2s; }
+/* ===============================================
+   ENGRANAJE GIRATORIO AL LADO DEL LOGO
+   =============================================== */
+.loader {
+  width: 24px;
+  height: 24px;
+  border: 3px solid #82ccdd;        /* color exterior */
+  border-top-color: #0a3d62;        /* color del borde superior (resalta) */
+  border-radius: 50%;               /* redondo */
+  animation: spin 1.2s linear infinite; /* gira constantemente */
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+/* =========================================================
+   ANIMACIÓN DE CÁMARA PARA GALERÍA
+   ========================================================= */
+.camera {
+  position: relative;
+  width: 28px;
+  height: 18px;
+  background: #0a3d62;
+  border-radius: 4px;
+  margin-left: 6px;
+  display: inline-block;
+  overflow: hidden;
+  animation: cameraBounce 2s ease-in-out infinite;
+}
+
+/* Lente */
+.camera .lens {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  background: #82ccdd;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: lensGlow 2s ease-in-out infinite alternate;
+}
+
+/* Flash */
+.camera .flash {
+  position: absolute;
+  top: 0;
+  right: 4px;
+  width: 6px;
+  height: 6px;
+  background: #ffd700;
+  border-radius: 50%;
+  opacity: 0;
+  animation: flashBlink 3s ease-in-out infinite;
+}
+
+/* Animaciones */
+@keyframes lensGlow {
+  0%, 100% { box-shadow: 0 0 4px #82ccdd; }
+  50% { box-shadow: 0 0 10px #82ccdd; }
+}
+@keyframes flashBlink {
+  0%, 90%, 100% { opacity: 0; }
+  92% { opacity: 1; }
+}
+@keyframes cameraBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+
+/* Botón flotante WhatsApp (siempre visible) */
+.whatsapp{
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  width: 60px;
+  height: 60px;
+  z-index: 9999;
+  border-radius: 50%;
+  background: #25d366; /* verde oficial */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 12px rgba(0,0,0,.25);
+  text-decoration: none;
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.whatsapp:hover{
+  transform: scale(1.08);
+  box-shadow: 0 6px 18px rgba(0,0,0,.35);
+}
+.whatsapp svg{
+  display:block;
+}
+
+/* =========================================================
+   LOGO ANIMADO QUE CAMBIA AUTOMÁTICAMENTE
+   ========================================================= */
+.logo-slider {
+  position: relative;
+  width: 48px;      /* tamaño del logo visible */
+  height: 48px;
+  overflow: hidden;
+  border-radius: 8px;
+}
+.logo-slider img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0;
+  animation: logoCycle 12s infinite;
+  transition: opacity 1s ease-in-out;
+}
+
+/* Mostrar cada imagen en una parte del ciclo */
+.logo-slider img:nth-child(1) { animation-delay: 0s; }
+.logo-slider img:nth-child(2) { animation-delay: 4s; }
+.logo-slider img:nth-child(3) { animation-delay: 8s; }
+
+/* Animación: muestra cada logo por unos segundos */
+@keyframes logoCycle {
+  0%, 8% { opacity: 1; }
+  25%, 100% { opacity: 0; }
+}
+
+/*Efectos de Descripcion*/
+.ventajas{
+  padding:3rem 1rem;
+  text-align:center;
+  background:#f9fafb;
+}
+.ventajas .grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:1.5rem;
+  margin-top:2rem;
+}
+.ventajas article{
+  background:#fff;
+  padding:1.5rem;
+  border-radius:12px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.08);
+  transition:transform 0.3s ease;
+}
+.ventajas article:hover{
+  transform:translateY(-5px);
+}
+
+/* =========================================================
+   ANIMACIÓN: CINTA TRANSPORTADORA PARA PRODUCTOS
+   ========================================================= */
+.belt {
+  position: relative;
+  width: 48px;
+  height: 14px;
+  margin-left: 8px;
+  background: linear-gradient(to right, #0a3d62, #3c6382);
+  border-radius: 8px;
+  overflow: hidden;
+  display: inline-block;
+  animation: beltMove 2s linear infinite;
+}
+
+/* Rodillos de la cinta */
+.belt .roller {
+  position: absolute;
+  bottom: -4px;
+  width: 6px;
+  height: 6px;
+  background: #82ccdd;
+  border-radius: 50%;
+  animation: rollMove 2s linear infinite;
+}
+.belt .roller:nth-child(1){ left: 6px; animation-delay: 0s; }
+.belt .roller:nth-child(2){ left: 22px; animation-delay: .3s; }
+.belt .roller:nth-child(3){ left: 38px; animation-delay: .6s; }
+
+/* Línea superior que simula el movimiento de la cinta */
+.belt .belt-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 4px;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(255,255,255,0.3) 0 6px,
+    transparent 6px 12px
+  );
+  animation: moveLine 1.2s linear infinite;
+}
+/* =========================================================
+   ANIMACIÓN: CINTA TRANSPORTADORA PARA PRODUCTOS
+   ========================================================= */
+.belt {
+  position: relative;
+  width: 48px;
+  height: 14px;
+  margin-left: 8px;
+  background: linear-gradient(to right, #0a3d62, #3c6382);
+  border-radius: 8px;
+  overflow: hidden;
+  display: inline-block;
+  animation: beltMove 2s linear infinite;
+}
+/* Rodillos de la cinta */
+.belt .roller {
+  position: absolute;
+  bottom: -4px;
+  width: 6px;
+  height: 6px;
+  background: #82ccdd;
+  border-radius: 50%;
+  animation: rollMove 2s linear infinite;
+}
+.belt .roller:nth-child(1){ left: 6px; animation-delay: 0s; }
+.belt .roller:nth-child(2){ left: 22px; animation-delay: .3s; }
+.belt .roller:nth-child(3){ left: 38px; animation-delay: .6s; }
+
+/* Línea superior que simula el movimiento de la cinta */
+.belt .belt-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 4px;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(255,255,255,0.3) 0 6px,
+    transparent 6px 12px
+  );
+  animation: moveLine 3s linear infinite;
+}
+
+/* Animaciones */
+@keyframes moveLine {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes rollMove {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes beltMove {
+  0%,100% { box-shadow: 0 0 4px rgba(10,61,98,0.3); }
+  50% { box-shadow: 0 0 10px rgba(10,61,98,0.5); }
+}
+/* ====== Rotación de logos en header (sin JS) ====== */
+.logo-rotator{
+  position: relative;
+  width: 28px;           /* tamaño del icono rotador */
+  height: 28px;
+  display: inline-block;
+  margin-right: 8px;
+}
+.logo-rotator img{
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: contain;
+  opacity: 0;
+  animation: logosCycle 12s infinite ease-in-out;
+}
+
+/* 3 logos: 0s / 4s / 8s */
+.logo-rotator img:nth-child(1){ animation-delay: 0s; }
+.logo-rotator img:nth-child(2){ animation-delay: 4s; }
+.logo-rotator img:nth-child(3){ animation-delay: 8s; }
+
+@keyframes logosCycle{
+  10%,26%   { opacity:1 }
+  33%,100% { opacity:0 }
+}
+
+/* Pausar si el usuario prefiere menos movimiento */
+@media (prefers-reduced-motion: reduce){
+  .logo-rotator img{ animation: none; opacity: 0; }
+  .logo-rotator img:first-child{ opacity:1; }
+}
+
+/* === SECCIÓN DE VIDEOS EMBEBIDOS (YOUTUBE) === */
+.videos-section {
+  text-align: center;
+  padding: 3rem 1rem;
+  background: #f5f7fa;
+}
+
+.videos-section h2 {
+  color: var(--primario);
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+}
+
+/* Grid responsivo */
+.videos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.videos-grid iframe {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 14px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.videos-grid iframe:hover {
+  transform: scale(1.03);
+  box-shadow: 0 10px 10px rgba(0,0,0,0.3);
+}

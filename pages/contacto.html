@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bobcat | Contacto</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="page-contacto">
+
+  <header class="header">
+    <!-- checkbox del menú -->
+    <input id="nav-toggle" type="checkbox" class="nav__toggle" hidden aria-hidden="true">
+
+    <nav class="nav">
+      <a href="../index.html" class="brand d-flex align-items-center gap-2 text-decoration-none">
+        <!-- contenedor rotador -->
+        <span class="logo-rotator">
+          <img src="/imgen/logo1.jpg" alt="Logo 1">
+          <img src="/imgen/logo2.jpg" alt="Logo 2">
+          <img src="/imgen/logo1.jpg" alt="Logo 3">
+        </span>
+        <span class="brand__txt">Maquinas Corrientes</span>
+      </a>
+
+      <ul class="menu">
+        <li><a href="../index.html">Inicio</a></li>
+        <li><a href="productos.html">Productos</a></li>
+        <li><a href="galeria.html">Galería</a></li>
+        <li><a href="contacto.html" aria-current="page">Contacto</a></li>
+      </ul>
+
+      <label for="nav-toggle" class="hamburger" aria-label="Abrir menú">
+        <span></span><span></span><span></span>
+      </label>
+    </nav>
+
+    <nav class="drawer">
+      <ul class="drawer__menu">
+        <li><a href="../index.html">Inicio</a></li>
+        <li><a href="productos.html">Productos</a></li>
+        <li><a href="galeria.html">Galería</a></li>
+        <li><a href="contacto.html" aria-current="page">Contacto</a></li>
+      </ul>
+    </nav>
+    <label for="nav-toggle" class="overlay" aria-hidden="true"></label>
+  </header>
+
+  <main class="contacto">
+    <h1>Contacto</h1>
+    <form class="form">
+      <label>Nombre
+        <input type="text" required>
+      </label>
+      <label>Teléfono
+        <input type="tel" required>
+      </label>
+      <label>Mensaje
+        <textarea required></textarea>
+      </label>
+      <label>Correo
+        <input type="Cor" required>
+      </label>
+      <button class="btn" type="submit">Enviar</button>
+    </form>
+  </main>
+
+  <footer class="footer">
+    <p>© 2025 Maquinas Corrientes</p>
+  </footer>
+</body>
+</html>
+
